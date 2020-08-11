@@ -59,34 +59,41 @@ public class RequestHandler extends Thread
 
             else if (incoming_request.choice.equalsIgnoreCase("change_predecessor"))
             {
+
+
                 int previous = node.getPredecessor_hashed();
                 int incoming = incoming_request.value;
                 int incoming_hashed = hash.hash_string(Integer.toString(incoming));
 
-                if(previous == -1) {
-                    node.setPredecessor_port(incoming);
-                    node.setPredecessor_hashed(incoming_hashed);
-                    response.status = true;
+                if(previous == incoming_hashed)
+                {response.status = true;}
 
-                    if (node.getSuccessor_port() == node.getPort()) {
-                        // Special case
-                        node.setSuccessor_port(incoming);
-                        node.setSuccessor_hashed(incoming_hashed);
-
+                else {
+                    {
+                        System.out.println("RECEIVED CHANGE PREDECESSOR @ " + node.getMyself_hashed() + "    FROM    " + incoming_hashed);
                     }
 
-                }
-
-                else
-                {
-                    int modulo_previous = (int) Math.abs(node.getMyself_hashed() - previous);
-                    int modulo_incoming_hashed = (int) Math.abs(node.getMyself_hashed() - incoming_hashed);
-
-                    if(modulo_incoming_hashed < modulo_previous)
-                    {
+                    if (previous == -1) {
                         node.setPredecessor_port(incoming);
                         node.setPredecessor_hashed(incoming_hashed);
                         response.status = true;
+
+                        if (node.getSuccessor_port() == node.getPort()) {
+                            // Special case
+                            node.setSuccessor_port(incoming);
+                            node.setSuccessor_hashed(incoming_hashed);
+
+                        }
+
+                    } else {
+                        int modulo_previous = (int) Math.abs(node.getMyself_hashed() - previous);
+                        int modulo_incoming_hashed = (int) Math.abs(node.getMyself_hashed() - incoming_hashed);
+
+                        if (modulo_incoming_hashed < modulo_previous) {
+                            node.setPredecessor_port(incoming);
+                            node.setPredecessor_hashed(incoming_hashed);
+                            response.status = true;
+                        }
                     }
                 }
 
