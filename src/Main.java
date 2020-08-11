@@ -12,7 +12,7 @@ public class Main
 
         int port = Integer.parseInt(br.readLine());
         int hashed= hash.hash_string(Integer.toString(port));
-        System.out.println("Myself hashed = "+hashed);
+        System.out.println("Myself hashed =  "+hashed);
 
         Node node = new Node(port,hashed);
 

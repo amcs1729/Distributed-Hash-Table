@@ -9,36 +9,38 @@ public class Utils
     }
     public int find_appropriate(int id)
     {
-        if(node.getPredecessor_hashed() == -1)
+        //Special case of single node
+
+        if((node.getPredecessor_port()==-1 )&& (node.getSuccessor_port()== node.getPort()))
+        {
+            System.out.println("SPECIAL CASE");
+            return (node.getPort());
+        }
+
+        // If I am the hashed
+        if(id == node.getMyself_hashed())
         {
                 System.out.println("CASE 1");
                 return (node.getPort());
         }
-        if (node.getPredecessor_hashed() != -1)
+        // If ID is larger than me and less than or equal to my successor
+        if ( (id> node.getMyself_hashed()) && (id<= node.getSuccessor_hashed())  )
         {
-            if(  (id> node.getPredecessor_hashed()) && (id<= node.getMyself_hashed())  )
-            {
-                System.out.println("CASE 2");
-                return (node.getPort());
-            }
+            System.out.println("CASE 2");
+            return (node.getSuccessor_port());
         }
 
-        if(  (id>node.getMyself_hashed())   &&   (id<= node.getSuccessor_hashed())  )
-        {
-            System.out.println("CASE 3");
-            return (node.getSuccessor_port());
-            // Returns the port number of the successsor
-        }
+        // else
         else
         {
-            System.out.println("CASE 4");
+            System.out.println("CASE 3");
             Request request = new Request("find_appropriate" ,null ,id);
             SendMessage message = new SendMessage(request, node.getSuccessor_port());
             Response response = message.send();
 
             return (response.int_response);
-            // Returns whatever value it gets from it's successors
         }
+
     }
 
     public boolean change_predecessor(int node_port, int hashed_node)

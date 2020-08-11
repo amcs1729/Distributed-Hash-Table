@@ -13,15 +13,16 @@ public class SendMessage
     }
 
     public Response send() {
-        Response response = null;
+        Response response = new Response();
         try {
-            System.out.println("trying to send msg to "+port);
+            //System.out.println("trying to send msg to "+port);
             Socket s = new Socket("localhost",port);
             ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(s.getInputStream());
             out.writeObject(request);
 
             response = (Response) in.readObject();
+            s.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

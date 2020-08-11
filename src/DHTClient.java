@@ -24,6 +24,7 @@ public class DHTClient
         {
             System.out.println("Enter known PORT");
             int known_port = Integer.parseInt(br.readLine());
+            node.setKnown_ip(known_port);
             Request request = new Request("find_appropriate",null, node.getMyself_hashed());
             SendMessage message = new SendMessage(request,known_port);
             Response response = message.send();
@@ -37,46 +38,51 @@ public class DHTClient
             message.send();
         }
 
+        Thread t = new Stabilization(node);
+        t.start();
+
 
             while(true) {
-            System.out.println("Insert 1\nGet 2");
-            int choice = Integer.parseInt(br.readLine());
+                System.out.println("INSERT....(1)\nGET....(2)\nINFO....(3)");
+                int choice = Integer.parseInt(br.readLine());
 
-            if (choice == 1) {
-                System.out.println("Enter key");
-                String key = br.readLine();
-                System.out.println("Enter value");
-                int value = Integer.parseInt(br.readLine());
+                if (choice == 1) {
+                    System.out.println("Enter key");
+                    String key = br.readLine();
+                    System.out.println("Enter value");
+                    int value = Integer.parseInt(br.readLine());
 
-                int port = utils.find_appropriate(hash.hash_string(key));
+                    int port = utils.find_appropriate(hash.hash_string(key));
 
-                Request request = new Request("put", key, value);
+                    Request request = new Request("put", key, value);
 
-                SendMessage message = new SendMessage(request, port);
-                Response response = message.send();
+                    SendMessage message = new SendMessage(request, port);
+                    Response response = message.send();
 
-                if(response.status)
+                    if (response.status) {
+                        System.out.println("Operation successful");
+                    } else {
+                        System.out.println("Oops error ....Could not put entry");
+                    }
+
+                } else if (choice == 2) {
+                    System.out.println("Enter key");
+                    String key = br.readLine();
+
+                    int port = utils.find_appropriate(hash.hash_string(key));
+
+                    Request request = new Request("get", key, -1);
+
+                    SendMessage message = new SendMessage(request, port);
+                    Response response = message.send();
+
+                    System.out.println(response.int_response);
+                } else if (choice == 3)
                 {
-                    System.out.println("Operation successful");
-                }
-                else
-                {
-                    System.out.println("Oops error ....Could not put entry");
+                    node.get_configurations();
                 }
 
-            } else if (choice == 2) {
-                System.out.println("Enter key");
-                String key = br.readLine();
-
-                int port = utils.find_appropriate(hash.hash_string(key));
-
-                Request request = new Request("get", key, -1);
-
-                SendMessage message = new SendMessage(request, port);
-                Response response = message.send();
-
-                System.out.println(response.int_response);
-            } else {
+            else {
                 System.out.println("Wrong choice");
             }
         }

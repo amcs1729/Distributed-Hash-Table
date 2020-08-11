@@ -8,6 +8,7 @@ public class Node
     private int successor_hashed;
     private int predecessor_port;
     private int predecessor_hashed;
+    private int known_ip;
 
     private ConcurrentHashMap<String , Integer> map;
 
@@ -19,6 +20,7 @@ public class Node
         this.predecessor_port = -1;
         this.successor_hashed = myself_hashed;
         this.successor_port = port;
+        this.known_ip = -1;
         map = new ConcurrentHashMap<String, Integer>();
     }
 
@@ -32,6 +34,7 @@ public class Node
 
     public void setSuccessor_port(int successor_port) {
         this.successor_port = successor_port;
+        System.out.println("Successor PORT changed to .....  "+successor_port);
     }
 
     public int getMyself_hashed() {
@@ -44,6 +47,7 @@ public class Node
 
     public void setSuccessor_hashed(int successor_hashed) {
         this.successor_hashed = successor_hashed;
+        System.out.println("Successor Hashed changed to .....  "+successor_hashed);
     }
     public void putvalue(String key, int value)
     {
@@ -76,6 +80,7 @@ public class Node
 
     public void setPredecessor_port(int predecessor_port) {
         this.predecessor_port = predecessor_port;
+        System.out.println("Predecessor PORT changed to .....  "+predecessor_port);
     }
 
     public int getPredecessor_hashed() {
@@ -84,5 +89,27 @@ public class Node
 
     public void setPredecessor_hashed(int predecessor_hashed) {
         this.predecessor_hashed = predecessor_hashed;
+        System.out.println("Predecessor Hashed changed to .....  "+predecessor_hashed);
+
+    }
+
+    public void get_configurations()
+    {
+        System.out.println("________________________________________________________");
+        System.out.println("PORT .... "+ port);
+        System.out.println("MYSELF HASHED .... "+myself_hashed);
+        System.out.println("SUCCESSOR PORT  .... "+successor_port);
+        System.out.println("SUCCESSOR HASHED  .... "+ successor_hashed);
+        System.out.println("PREDECESSOR PORT  ....  "+ predecessor_port);
+        System.out.println("PREDECESSOR HASHED ....  "+ predecessor_hashed);
+        System.out.println("________________________________________________________");
+    }
+
+    public int getKnown_ip() {
+        return known_ip;
+    }
+
+    public void setKnown_ip(int known_ip) {
+        this.known_ip = known_ip;
     }
 }
