@@ -5,10 +5,12 @@ public class Stabilization extends Thread
 {
     Node node;
     Hash hash;
+    Utils utils;
     Stabilization(Node node)
     {
         this.node = node;
         this.hash = new Hash();
+        this.utils = new Utils(node);
     }
 
     void check_successor()
@@ -86,7 +88,7 @@ public class Stabilization extends Thread
         SendMessage message = new SendMessage(request, node.getSuccessor_port());
         Response response = message.send();
         int x = response.int_response;
-        if(x != -1) {
+        if(node.getPort() != node.getSuccessor_port()) {
             int hashed_x = hash.hash_string(Integer.toString(x));
 
             if ((hashed_x > node.getMyself_hashed()) && (hashed_x < node.getSuccessor_hashed())) {
@@ -97,19 +99,37 @@ public class Stabilization extends Thread
         }
     }
 
+    void fix_fingers()
+    {
+        if(node.getPort() == node.getSuccessor_port())
+        {
+            return;
+        }
+        for(int i=0; i<node.fingertable.length; i++)
+        {
+            int successor = utils.find_appropriate(node.fingertable[i][0]);
+            node.fingertable[i][1] = successor;
+            node.fingertable[i][2] = hash.hash_string(Integer.toString(successor));
+        }
+    }
+
     @Override
     public void run()
     {
         while(true)
         {
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             check_successor();
             check_predecessor();
             stabilize();
+            fix_fingers();
+
+
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

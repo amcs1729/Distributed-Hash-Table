@@ -1,68 +1,62 @@
-public class Utils
-{
+public class Utils {
     Node node;
     Hash hash;
-    Utils(Node node)
-    {
+
+    Utils(Node node) {
         this.node = node;
         this.hash = new Hash();
     }
-    public int find_appropriate(int id)
-    {
-        //Special case of single node
 
-        if((node.getPredecessor_port()==-1 )&& (node.getSuccessor_port()== node.getPort()))
-        {
-            System.out.println("SPECIAL CASE");
-            return (node.getPort());
-        }
+    public int closest_preceeding(int id) {
+        // 2^  [i][0] .....  port  [i][1]  .....   hashed  [i][2]
+        int diff = 99; // Since I am taking modulo 64, for any valid, it is less than 64
+        // Will return int port
+        int port = node.getSuccessor_port();
+        for (int i = 0; i < node.fingertable.length; i++) {
+            if (node.fingertable[i][2] == id) {
+                return node.fingertable[i][1];
+            }
 
-        // If I am the hashed
-        if(id == node.getMyself_hashed())
-        {
-                System.out.println("CASE 1");
-                return (node.getPort());
-        }
-        // If ID is larger than me and less than or equal to my successor
-        if ( (id> node.getMyself_hashed()) && (id<= node.getSuccessor_hashed())  )
-        {
-            System.out.println("CASE 2");
-            return (node.getSuccessor_port());
-        }
+            if (node.fingertable[i][2] > id) {
+                continue;
+            }
 
-        // else
-        else
-        {
-            System.out.println("CASE 3");
-            Request request = new Request("find_appropriate" ,null ,id);
-            SendMessage message = new SendMessage(request, node.getSuccessor_port());
-            Response response = message.send();
-
-            return (response.int_response);
-        }
-
-    }
-
-    public boolean change_predecessor(int node_port, int hashed_node)
-    {
-        // Check if predecessor is none or if it is correct
-        boolean status = false;
-        if(node.getPredecessor_hashed() == -1)
-        {
-            node.setPredecessor_port(node_port);
-            node.setPredecessor_hashed(hashed_node);
-            status = true;
-        }
-
-        else
-        {
-            if (hashed_node>node.getPredecessor_hashed())
-            {
-                node.setPredecessor_port(node_port);
-                node.setPredecessor_hashed(hashed_node);
-                status = true;
+            int temp_diff = node.fingertable[i][2] - id;
+            if (temp_diff <= diff) {
+                diff = temp_diff;
+                port = node.fingertable[i][1];
             }
         }
-        return status;
+        return port;
+    }
+
+    public int find_appropriate(int id) {
+        // If i am the boss
+        int pred = node.getPredecessor_hashed();
+        int succ = node.getSuccessor_hashed();
+        int me = node.getMyself_hashed();
+
+        if (pred > me) {
+            pred = 0;
+        }
+        if (succ < me) {
+            succ += 63;
+        }
+
+        if ((id > pred) && (id <= me)) {
+            return node.getPort();
+        } else if ((id > me) && (id <= succ)) {
+            return node.getSuccessor_port();
+        }
+
+        // Check in finger table and send message to that and return the result
+        else {
+            // See closest preceeding in fingertabe and forward to it . If no such , send to successor.
+            Request request = new Request("find_appropriate", null, id);
+            SendMessage message = new SendMessage(request, node.getSuccessor_port());
+            Response response = message.send();
+            return (response.int_response);
+        }
     }
 }
+

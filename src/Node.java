@@ -9,7 +9,7 @@ public class Node
     private int predecessor_port;
     private int predecessor_hashed;
     private int known_ip;
-
+    public int fingertable[][];
     private ConcurrentHashMap<String , Integer> map;
 
     Node(int port, int myself_hashed)
@@ -21,7 +21,18 @@ public class Node
         this.successor_hashed = myself_hashed;
         this.successor_port = port;
         this.known_ip = -1;
+        this.fingertable = new int[6][3];
         map = new ConcurrentHashMap<String, Integer>();
+    }
+    public void initialize_fingers()
+    {
+        for (int i=0;i<6;i++)
+        {
+            int to_find = (myself_hashed+ (int) Math.pow(2,i)) % 64 ;
+            fingertable[i][0] = (to_find);
+            fingertable[i][1] = port;
+            fingertable[i][2] = myself_hashed;
+        }
     }
 
     public int getPort() {
@@ -93,16 +104,29 @@ public class Node
 
     }
 
+    public void show_finger_table()
+    {
+        System.out.println("\t\t\tFinger Table");
+        System.out.println("|\t\tENTRY \t\t FOR \t\t SUCCESSOR\t\t PORT|");
+        for(int i=0;i< fingertable.length;i++)
+        {
+            System.out.println("|\t\t("+i+")\t\t\t\t"+fingertable[i][0]+"\t\t\t"+fingertable[i][2]+"\t\t\t"+fingertable[i][1]+"|");
+            System.out.println("|____________________________________________________|");
+
+        }
+    }
+
     public void get_configurations()
     {
-        System.out.println("________________________________________________________");
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         System.out.println("PORT .... "+ port);
         System.out.println("MYSELF HASHED .... "+myself_hashed);
         System.out.println("SUCCESSOR PORT  .... "+successor_port);
         System.out.println("SUCCESSOR HASHED  .... "+ successor_hashed);
         System.out.println("PREDECESSOR PORT  ....  "+ predecessor_port);
         System.out.println("PREDECESSOR HASHED ....  "+ predecessor_hashed);
-        System.out.println("________________________________________________________");
+        show_finger_table();
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#");
     }
 
     public int getKnown_ip() {

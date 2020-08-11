@@ -13,6 +13,7 @@ public class DHTClient
         this.utils = new Utils(this.node);
         this.hash = new Hash();
     }
+
     public  void start() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -29,7 +30,8 @@ public class DHTClient
             SendMessage message = new SendMessage(request,known_port);
             Response response = message.send();
 
-            System.out.println("My successor = "+response.int_response);
+            System.out.println("REPORTED SUCCESSOR  -  "+response.int_response);
+
             node.setSuccessor_port(response.int_response);
             node.setSuccessor_hashed(hash.hash_string(Integer.toString(response.int_response)));
 

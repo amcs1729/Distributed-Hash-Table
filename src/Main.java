@@ -15,6 +15,7 @@ public class Main
         System.out.println("Myself hashed =  "+hashed);
 
         Node node = new Node(port,hashed);
+        node.initialize_fingers();
 
         Thread t = new DHTServer(node);
         t.start();

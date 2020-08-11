@@ -56,31 +56,68 @@ public class RequestHandler extends Thread
                 response.status = true;
                 response.int_response = utils.find_appropriate(incoming_request.value);
             }
-            else if(incoming_request.choice.equalsIgnoreCase("change_predecessor"))
-            {
-                boolean status = utils.change_predecessor(incoming_request.value, hash.hash_string(Integer.toString(incoming_request.value)));
-                if(status)
-                {
-                    // Check special Case
-                    if(node.getSuccessor_port() == node.getPort())
-                    {
-                        node.setSuccessor_hashed(hash.hash_string(Integer.toString(incoming_request.value)));
-                        node.setSuccessor_port(incoming_request.value);
 
-                        Request request = new Request("change_predecessor" , null , node.getPort());
-                        SendMessage message = new SendMessage(request, incoming_request.value);
-                        message.send();
+            else if (incoming_request.choice.equalsIgnoreCase("change_predecessor"))
+            {
+                int previous = node.getPredecessor_hashed();
+                int incoming = incoming_request.value;
+                int incoming_hashed = hash.hash_string(Integer.toString(incoming));
+
+                if(previous == -1) {
+                    node.setPredecessor_port(incoming);
+                    node.setPredecessor_hashed(incoming_hashed);
+                    response.status = true;
+
+                    if (node.getSuccessor_port() == node.getPort()) {
+                        // Special case
+                        node.setSuccessor_port(incoming);
+                        node.setSuccessor_hashed(incoming_hashed);
+
                     }
 
-                    response.status = true;
                 }
+
+                else
+                {
+                    int modulo_previous = (int) Math.abs(node.getMyself_hashed() - previous);
+                    int modulo_incoming_hashed = (int) Math.abs(node.getMyself_hashed() - incoming_hashed);
+
+                    if(modulo_incoming_hashed < modulo_previous)
+                    {
+                        node.setPredecessor_port(incoming);
+                        node.setPredecessor_hashed(incoming_hashed);
+                        response.status = true;
+                    }
+                }
+
+                //if (previous != -1)
+                //{
+                //Request request = new Request("change_successor", null , incoming);
+                //    SendMessage message = new SendMessage(request , previous_port);
+                //    message.send();
+                //}
+            }
+
+            else if (incoming_request.choice.equalsIgnoreCase("change_successor"))
+            {
+                int incoming = incoming_request.value;
+                int incoming_hashed = hash.hash_string(Integer.toString(incoming));
+                node.setSuccessor_port(incoming);
+                node.setSuccessor_hashed(incoming_hashed);
+                response.status = true;
             }
 
             else if (incoming_request.choice.equalsIgnoreCase("send_predecessor"))
             {
-                response.status = true;
                 response.int_response = node.getPredecessor_port();
+                response.status = true;
             }
+
+
+
+
+
+
 
             else
                 {
