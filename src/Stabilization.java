@@ -122,7 +122,7 @@ public class Stabilization extends Thread
             check_successor();
             check_predecessor();
             stabilize();
-            //fix_fingers();
+            fix_fingers();
 
 
             try {
