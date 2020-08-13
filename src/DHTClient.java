@@ -14,6 +14,27 @@ public class DHTClient
         this.hash = new Hash();
     }
 
+    public void initialise_fingers()
+    {
+        for (int i=0;i<6;i++)
+        {
+            node.fingertable[i][1] = node.getSuccessor_port();
+            node.fingertable[i][2] = node.getSuccessor_hashed();
+        }
+    }
+
+    public void fix_fingers()
+    {
+        for (int i=0;i<6;i++)
+        {
+            int key = node.fingertable[i][0];
+            Request request = new Request("find_appropriate",null, key);
+            SendMessage message = new SendMessage(request,node.getSuccessor_port());
+            Response response = message.send();
+            node.fingertable[i][1] = response.int_response;
+            node.fingertable[i][2] = hash.hash_string(Integer.toString(response.int_response));
+        }
+    }
     public  void start() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -34,6 +55,7 @@ public class DHTClient
 
             node.setSuccessor_port(response.int_response);
             node.setSuccessor_hashed(hash.hash_string(Integer.toString(response.int_response)));
+            initialise_fingers();
 
             request = new Request("change_predecessor",null,node.getPort());
             message = new SendMessage(request, node.getSuccessor_port());
