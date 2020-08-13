@@ -64,16 +64,15 @@ public class RequestHandler extends Thread
                 int previous = node.getPredecessor_hashed();
                 int incoming = incoming_request.value;
                 int incoming_hashed = hash.hash_string(Integer.toString(incoming));
+                int me_hashed = node.getMyself_hashed();
+                int previous_port = node.getPredecessor_port();
 
                 if(previous == incoming_hashed)
                 {response.status = true;}
 
                 else {
-                    {
                         System.out.println("RECEIVED CHANGE PREDECESSOR @ " + node.getMyself_hashed() + "    FROM    " + incoming_hashed);
-                    }
-
-                    if (previous == -1) {
+                        if (  (previous == -1)     ||      (previous == node.getMyself_hashed())   ) {
                         node.setPredecessor_port(incoming);
                         node.setPredecessor_hashed(incoming_hashed);
                         response.status = true;
@@ -85,7 +84,9 @@ public class RequestHandler extends Thread
 
                         }
 
-                    } else {
+                    }
+                    /*else
+                        {
                         int modulo_previous = (int) Math.abs(node.getMyself_hashed() - previous);
                         int modulo_incoming_hashed = (int) Math.abs(node.getMyself_hashed() - incoming_hashed);
 
@@ -93,6 +94,40 @@ public class RequestHandler extends Thread
                             node.setPredecessor_port(incoming);
                             node.setPredecessor_hashed(incoming_hashed);
                             response.status = true;
+                        }
+                    }*/
+                    else
+                    {
+                        // Case 1 when both from same side.
+                        if ( (previous<=me_hashed)  && (incoming_hashed<=me_hashed) )
+                        {
+                            if(incoming_hashed>previous)
+                            {
+                                node.setPredecessor_hashed(incoming_hashed);
+                                node.setPredecessor_port(incoming);
+                                response.status = true;
+                            }
+                        }
+
+                        // Case 2 when both from opposite side
+                        else if ( (previous>=me_hashed) &&(incoming_hashed>=me_hashed) )
+                        {
+                            if(incoming_hashed>previous)
+                            {
+                                node.setPredecessor_hashed(incoming_hashed);
+                                node.setPredecessor_port(incoming);
+                                response.status = true;
+                            }
+                        }
+
+                        else
+                        {
+                            if(incoming_hashed<=me_hashed)
+                            {
+                                node.setPredecessor_hashed(incoming_hashed);
+                                node.setPredecessor_port(incoming);
+                                response.status = true;
+                            }
                         }
                     }
                 }
@@ -107,11 +142,13 @@ public class RequestHandler extends Thread
 
             else if (incoming_request.choice.equalsIgnoreCase("change_successor"))
             {
+                System.out.println("RECEIVED CHANGE SUCCESSOR @ " + node.getMyself_hashed() + "    FROM    " + hash.hash_string(Integer.toString(incoming_request.value)));
                 int incoming = incoming_request.value;
                 int incoming_hashed = hash.hash_string(Integer.toString(incoming));
                 node.setSuccessor_port(incoming);
                 node.setSuccessor_hashed(incoming_hashed);
                 response.status = true;
+
             }
 
             else if (incoming_request.choice.equalsIgnoreCase("send_predecessor"))

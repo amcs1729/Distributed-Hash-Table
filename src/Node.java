@@ -125,7 +125,7 @@ public class Node
         System.out.println("SUCCESSOR HASHED  .... "+ successor_hashed);
         System.out.println("PREDECESSOR PORT  ....  "+ predecessor_port);
         System.out.println("PREDECESSOR HASHED ....  "+ predecessor_hashed);
-        show_finger_table();
+        //show_finger_table();
         System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#");
     }
 
