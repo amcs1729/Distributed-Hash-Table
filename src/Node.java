@@ -10,6 +10,7 @@ public class Node
     private int predecessor_hashed;
     private int known_ip;
     public int fingertable[][];
+    public int successor_list [];
     private ConcurrentHashMap<String , Integer> map;
 
     Node(int port, int myself_hashed)
@@ -22,6 +23,7 @@ public class Node
         this.successor_port = port;
         this.known_ip = -1;
         this.fingertable = new int[6][3];
+        this.successor_list = new int[6];
         map = new ConcurrentHashMap<String, Integer>();
     }
     public void initialize_fingers()
@@ -32,6 +34,13 @@ public class Node
             fingertable[i][0] = (to_find);
             fingertable[i][1] = port;
             fingertable[i][2] = myself_hashed;
+        }
+    }
+    public void initialie_succesor_list()
+    {
+        for (int i=0;i<6;i++)
+        {
+            successor_list[i] = port;
         }
     }
 

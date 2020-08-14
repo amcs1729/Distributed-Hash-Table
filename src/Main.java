@@ -16,6 +16,7 @@ public class Main
 
         Node node = new Node(port,hashed);
         node.initialize_fingers();
+        node.initialie_succesor_list();
 
         Thread t = new DHTServer(node);
         t.start();

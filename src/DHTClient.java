@@ -23,13 +23,13 @@ public class DHTClient
         }
     }
 
-    public void fix_fingers()
+    public void fix_fingers(int port)
     {
         for (int i=0;i<6;i++)
         {
             int key = node.fingertable[i][0];
             Request request = new Request("find_appropriate",null, key);
-            SendMessage message = new SendMessage(request,node.getSuccessor_port());
+            SendMessage message = new SendMessage(request,port);
             Response response = message.send();
             node.fingertable[i][1] = response.int_response;
             node.fingertable[i][2] = hash.hash_string(Integer.toString(response.int_response));
@@ -52,6 +52,8 @@ public class DHTClient
             Response response = message.send();
 
             System.out.println("REPORTED SUCCESSOR  -  "+response.int_response);
+
+            fix_fingers(known_port);
 
             node.setSuccessor_port(response.int_response);
             node.setSuccessor_hashed(hash.hash_string(Integer.toString(response.int_response)));

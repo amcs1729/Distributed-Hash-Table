@@ -1,4 +1,3 @@
-import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
 public class Stabilization extends Thread
@@ -33,12 +32,13 @@ public class Stabilization extends Thread
             else
             {
                 System.out.println("Could not connect to SUCCESSOR @ PORT   "+node.getSuccessor_port());
-                request = new Request("find_appropriate",null, node.getMyself_hashed());
-                message = new SendMessage(request,node.getKnown_ip());
-                response = message.send();
-                System.out.println("Changed  successor = "+response.int_response);
-                node.setSuccessor_port(response.int_response);
-                node.setSuccessor_hashed(hash.hash_string(Integer.toString(response.int_response)));
+                //request = new Request("find_appropriate",null, node.getMyself_hashed());
+                //message = new SendMessage(request,node.getKnown_ip());
+                //response = message.send();
+                //System.out.println("Changed  successor = "+response.int_response);
+                //node.setSuccessor_port(response.int_response);
+                //node.setSuccessor_hashed(hash.hash_string(Integer.toString(response.int_response)));
+                change_successor_list();
             }
         }
         catch (Exception e)
@@ -47,6 +47,29 @@ public class Stabilization extends Thread
         }
     }
 
+    void update_successor_list()
+    {
+        int successor = node.getSuccessor_port();
+        for(int i=1;i<6;i++)
+        {
+            Request request = new Request("send_successor" , null , 0);
+            SendMessage message = new SendMessage(request, successor);
+            Response response = message.send();
+            node.successor_list[i] = response.int_response;
+            successor = response.int_response;
+        }
+    }
+
+    void change_successor_list()
+    {
+        // Assuming immediate successor not working
+        for(int i=1;i<6;i++)
+        {
+            node.successor_list[i-1] = node.successor_list[i];
+        }
+        node.setSuccessor_hashed(hash.hash_string(Integer.toString(node.successor_list[0])));
+        node.setSuccessor_port(node.successor_list[0]);
+    }
     void check_predecessor()
     {
         if(node.getPredecessor_port() == -1)
@@ -121,12 +144,13 @@ public class Stabilization extends Thread
 
             check_successor();
             check_predecessor();
+            update_successor_list();
             stabilize();
             fix_fingers();
 
 
             try {
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

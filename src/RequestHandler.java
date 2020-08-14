@@ -156,6 +156,11 @@ public class RequestHandler extends Thread
                 response.int_response = node.getPredecessor_port();
                 response.status = true;
             }
+            else if (incoming_request.choice.equalsIgnoreCase("send_successor"))
+            {
+                response.int_response = node.getSuccessor_port();
+                response.status = true;
+            }
 
 
 

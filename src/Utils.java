@@ -54,10 +54,11 @@ public class Utils {
         // Check in finger table and send message to that and return the result
         else {
             // See closest preceeding in fingertabe and forward to it . If no such , send to successor.
-            int closest_port =closest_preceeding(id);
+            //int closest_port =closest_preceeding(id);
+            //Request request = new Request("find_appropriate", null, id);
             Request request = new Request("find_appropriate", null, id);
-            SendMessage message = new SendMessage(request, closest_port);
-            // SendMessage message = new SendMessage(request, node.getSuccessor_port());
+            //SendMessage message = new SendMessage(request, closest_port);
+            SendMessage message = new SendMessage(request, node.getSuccessor_port());
             Response response = message.send();
             return (response.int_response);
         }
