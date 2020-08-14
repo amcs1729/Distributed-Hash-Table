@@ -52,9 +52,6 @@ public class DHTClient
             Response response = message.send();
 
             System.out.println("REPORTED SUCCESSOR  -  "+response.int_response);
-
-            fix_fingers(known_port);
-
             node.setSuccessor_port(response.int_response);
             node.setSuccessor_hashed(hash.hash_string(Integer.toString(response.int_response)));
             initialise_fingers();

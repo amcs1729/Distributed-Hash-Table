@@ -114,7 +114,13 @@ public class Stabilization extends Thread
         if(node.getPort() != node.getSuccessor_port()) {
             int hashed_x = hash.hash_string(Integer.toString(x));
 
-            if ((hashed_x > node.getMyself_hashed())  && (x!= -1)){//&& (hashed_x < node.getSuccessor_hashed())) {
+            //if ((hashed_x > node.getMyself_hashed())  && (x!= -1)){//&& (hashed_x < node.getSuccessor_hashed())) {
+
+                // previous and this from other side
+                // previous and this from this side
+                // two are from differnt sides
+            if(x!= -1 && x!= node.getPort())
+            {
                 node.setSuccessor_port(x);
                 node.setSuccessor_hashed(hashed_x);
             }
