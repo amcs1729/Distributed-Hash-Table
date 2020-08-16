@@ -1,4 +1,6 @@
 # Attention Guided Low light Image Enhancement
+CONAITEN T HASHING 
+
 
 ## Project Name
 Distributed Hash Table
@@ -19,6 +21,14 @@ While making this system, I have taken a few assumptions that simplify the proce
 
 ## A sneak peak into the architecture :)
 
+#### Operations
+The Hash Table supports oprations like INSERT(to insert new entry) , GET (to get the value of a key) , DELETE (to delete an entry from a hash table).
+##### How do the nodes decide on which node is a key stored or in which node to insert?
+The key is first hashed by an algorithm , like SHA1(I have used a simpler hash function). Then it uses consistent hashing to generate a number between [0, M] , where M is the maximum number of nodes that can be present in the ring. Then the nodes use some predefined heuristics to determine the node on which it should be stores. When the node numeber is found, it checks if it has the adress of the remote node that should store it(from it's fingertables). If not, it forwards it to some other node(to which node it will forward this message is again governed by some rules) which again checks if it has the adress of the node that is requires and the process continues. \
+ \
+ 
+
+#### About FingerTables
 Before reading this, I would request you to go over the![Chord Paper](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf) since I am not going to go over the concepts described in the paper. \
 Each node has a Lookup Table which contains the PORT number of some other nodes in the table. Now, we can have two extreme cases-
 ##### 1) When each node stores the PORT number of all the nodes present in the system
@@ -31,4 +41,13 @@ Disadvantages - The lookup and insertion complexities will be O(N), which is not
 
 ##### 1) So....What do we do now?
 We use lookup tables that contain floor(log M, base 2) adresses, where M is the maximum number of nodes that can be present in the Chord Ring which is decided by the application layer. \
-By doing so, we can reduce lookup and insertion complexities to O(log M), which is quiet acceptable.
+By doing so, we hit the sweet spot. Now we can reduce lookup and insertion complexities to O(log M), which is quiet acceptable. \
+I would encourage you to check out the original paper to know which nodes are present in the fingertables.
+
+
+#### How do nodes communicate?
+Each node has a Client(DHTClient.java) and Server(DHTServer.java) class that is used to Send requests and listen to incoming requests to the node. \
+The communication happens using Sockets that use TCP as Transport Layer Protocol.
+
+#### How do Nodes guarantee fault tolerance?
+I would start this by stating the fact that Chord does not gurantee 100 % fault tolerance(Like any other distributed systems). However, it does take care that there is no single point of failure. 
