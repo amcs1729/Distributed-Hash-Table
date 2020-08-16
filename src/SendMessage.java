@@ -15,7 +15,6 @@ public class SendMessage
     public Response send() {
         Response response = new Response();
         try {
-            //System.out.println("trying to send msg to "+port);
             Socket s = new Socket("localhost",port);
             ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(s.getInputStream());

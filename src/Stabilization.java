@@ -32,12 +32,6 @@ public class Stabilization extends Thread
             else
             {
                 System.out.println("Could not connect to SUCCESSOR @ PORT   "+node.getSuccessor_port());
-                //request = new Request("find_appropriate",null, node.getMyself_hashed());
-                //message = new SendMessage(request,node.getKnown_ip());
-                //response = message.send();
-                //System.out.println("Changed  successor = "+response.int_response);
-                //node.setSuccessor_port(response.int_response);
-                //node.setSuccessor_hashed(hash.hash_string(Integer.toString(response.int_response)));
                 change_successor_list();
             }
         }
@@ -62,7 +56,6 @@ public class Stabilization extends Thread
 
     void change_successor_list()
     {
-        // Assuming immediate successor not working
         for(int i=1;i<6;i++)
         {
             node.successor_list[i-1] = node.successor_list[i];
@@ -113,12 +106,6 @@ public class Stabilization extends Thread
         int x = response.int_response;
         if(node.getPort() != node.getSuccessor_port()) {
             int hashed_x = hash.hash_string(Integer.toString(x));
-
-            //if ((hashed_x > node.getMyself_hashed())  && (x!= -1)){//&& (hashed_x < node.getSuccessor_hashed())) {
-
-                // previous and this from other side
-                // previous and this from this side
-                // two are from differnt sides
             if(x!= -1 && x!= node.getPort())
             {
                 node.setSuccessor_port(x);

@@ -85,17 +85,6 @@ public class RequestHandler extends Thread
                         }
 
                     }
-                    /*else
-                        {
-                        int modulo_previous = (int) Math.abs(node.getMyself_hashed() - previous);
-                        int modulo_incoming_hashed = (int) Math.abs(node.getMyself_hashed() - incoming_hashed);
-
-                        if (modulo_incoming_hashed < modulo_previous) {
-                            node.setPredecessor_port(incoming);
-                            node.setPredecessor_hashed(incoming_hashed);
-                            response.status = true;
-                        }
-                    }*/
                     else
                     {
                         // Case 1 when both from same side.
@@ -131,13 +120,6 @@ public class RequestHandler extends Thread
                         }
                     }
                 }
-
-                //if (previous != -1)
-                //{
-                //Request request = new Request("change_successor", null , incoming);
-                //    SendMessage message = new SendMessage(request , previous_port);
-                //    message.send();
-                //}
             }
 
             else if (incoming_request.choice.equalsIgnoreCase("change_successor"))
@@ -161,13 +143,6 @@ public class RequestHandler extends Thread
                 response.int_response = node.getSuccessor_port();
                 response.status = true;
             }
-
-
-
-
-
-
-
             else
                 {
                 System.out.println("Oops!! Unknown Request :(");

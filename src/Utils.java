@@ -9,7 +9,8 @@ public class Utils {
 
     public int closest_preceeding(int id) {
         // 2^  [i][0] .....  port  [i][1]  .....   hashed  [i][2]
-        int diff = 99; // Since I am taking modulo 64, for any valid, it is less than 64
+        int diff = 29792458; // Since I am taking modulo 64, for any valid, it is less than 64
+        // For those of you don't know, 299792458 is the speed of light in vaccum ;)
         int port = node.getSuccessor_port();
         int port_hashed = node.getSuccessor_hashed();
         if(id>=port_hashed)
@@ -54,10 +55,8 @@ public class Utils {
         else {
             // See closest preceeding in fingertabe and forward to it . If no such , send to successor.
             int closest_port =closest_preceeding(id);
-            //Request request = new Request("find_appropriate", null, id);
             Request request = new Request("find_appropriate", null, id);
             SendMessage message = new SendMessage(request, closest_port);
-            //SendMessage message = new SendMessage(request, node.getSuccessor_port());
             Response response = message.send();
             return (response.int_response);
         }
