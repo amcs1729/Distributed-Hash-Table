@@ -16,3 +16,6 @@ While making this system, I have taken a few assumptions that simplify the proce
 1) The number of nodes is assumed to be 64.(This is mostly controlled by the application layer that runs on top of the DHT implemetation.)
 2) In the original Chord paper, SHA1 is used to hash the nodes. But here I have used a simpler hash function because my main aim was in the implementation rather than using it as a full fledged software for large companies.
 
+## A sneak peak into the architecture :)
+
+Before reading this, I would request you to go over the![Chord Paper](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf) since I am not going to go over the concepts described in the paper.
