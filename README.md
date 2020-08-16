@@ -22,12 +22,13 @@ While making this system, I have taken a few assumptions that simplify the proce
 Before reading this, I would request you to go over the![Chord Paper](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf) since I am not going to go over the concepts described in the paper. \
 Each node has a Lookup Table which contains the PORT number of some other nodes in the table. Now, we can have two extreme cases-
 ##### 1) When each node stores the PORT number of all the nodes present in the system
-Advantages - We can have O(1) lookup and insertion.
+Advantages - We can have O(1) lookup and insertion. \
 Disadvantages - The memory requirements increase linearly and when a new node arrives or nodes leave(peer churns), all the nodes have to change their lookup tables which is very cumbersome and all nodes will have to perform update operaions.
 
 ##### 1) When each node stores the PORT number of only it's successor
-Advantages - When new nodes arrive or nodes leave the system , only two nodes will perform update operations on their lookup tables.
+Advantages - When new nodes arrive or nodes leave the system , only two nodes will perform update operations on their lookup tables. \
 Disadvantages - The lookup and insertion complexities will be O(N), which is not at all acceptable in large companies where increase in latency of few milliseconds can hamper their business.
 
 ##### 1) So....What do we do now?
-We 
+We use lookup tables that contain floor(log M, base 2) adresses, where M is the maximum number of nodes that can be present in the Chord Ring which is decided by the application layer. \
+By doing so, we can reduce lookup and insertion complexities to O(log M), which is quiet acceptable.
