@@ -1,4 +1,4 @@
-# Attention Guided Low light Image Enhancement
+# Distributed Hash Table (Chord implementation)
 
 ## Project Name
 Distributed Hash Table
