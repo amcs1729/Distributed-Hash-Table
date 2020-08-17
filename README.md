@@ -1,6 +1,4 @@
 # Attention Guided Low light Image Enhancement
-CONAITEN T HASHING 
-
 
 ## Project Name
 Distributed Hash Table
@@ -8,7 +6,7 @@ Distributed Hash Table
 
 Implement a Distributed Hash Table that is tolerant to peer churns and is highly scaleable and needs no central server.
 
-## What's the need for creating this Model?
+## What's the need for creating this System?
 Distributed Systems are very important for large organizations that require large amount of memory and storage. A Hash Table is an inmemory data structure to store items as Key->Value pair. Here, I try to implement a Distributed Hash Table that stores String-> Integer mapping. I have used Chord as the underlying algorithm.
 
 
@@ -18,6 +16,10 @@ Distributed Systems are very important for large organizations that require larg
 #### Operations
 The Hash Table supports oprations like INSERT(to insert new entry) , GET (to get the value of a key) , DELETE (to delete an entry from a hash table).
 ##### How do the nodes decide on which node is a key stored or in which node to insert?
+All the nodes are assigned a node number. \
+First each node's IP is hashed using a suitable Hash Function(SHA1 in original paper). Then we use consistent hashing to place the nodes in a circular fashion which is known as Chord circle. \
+
+
 The key is first hashed by an algorithm , like SHA1(I have used a simpler hash function). Then it uses consistent hashing to generate a number between [0, M] , where M is the maximum number of nodes that can be present in the ring. Then the nodes use some predefined heuristics to determine the node on which it should be stores. When the node numeber is found, it checks if it has the adress of the remote node that should store it(from it's fingertables). If not, it forwards it to some other node(to which node it will forward this message is again governed by some rules) which again checks if it has the adress of the node that is requires and the process continues. \
  \
  
@@ -47,7 +49,7 @@ The communication happens using Sockets that use TCP as Transport Layer Protocol
 I would start this by stating the fact that Chord does not gurantee 100 % fault tolerance(Like any other distributed systems). However, it does take care that there is no single point of failure. Each node maintains a list of successors where it stores -> The successor, The successor's successor and so on... /
 This ensures that even if one node fails , it's predecessor has the adress of it's successor's successor which will now become it's successor. \
 So how many adresses should I store in the successor list? \
-Well, 
+Well, we choose an optimal number which is floor(log(M) base 2).
 
 
 
